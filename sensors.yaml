@@ -1,0 +1,26 @@
+# MariaDB database size sensor
+- platform: sql
+  db_url: !secret mariadb_url
+  scan_interval: 3600
+  queries:
+    - name: MariaDB Database Size
+      query: 'SELECT table_schema "homeassistant", Round(Sum(data_length + index_length) / POWER(1024,2), 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;'
+      column: "value"
+      unit_of_measurement: MB
+
+# InfluxDB database size sensor
+- platform: influxdb
+  host: localhost
+  port: 8086
+  username: !secret influxdb_user
+  password: !secret influxdb_pass
+  scan_interval: 3600
+  queries:
+    - name: InfluxDB Database Size
+      unit_of_measurement: MB
+      group_function: sum
+      measurement: '"monitor"."shard"'
+      database: _internal
+      where: '"database"=''homeassistant'' AND time > now() - 5m'
+      field: diskBytes
+      value_template: "{{ (value | float(0) / 1024 /1024) | round(1) }}"

@@ -1,0 +1,50 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor: !include sensors.yaml
+binary_sensor: !include binary_sensors.yaml
+
+# Use MariaDB
+recorder:
+  db_url: !secret mariadb_url
+  auto_purge: true
+  purge_keep_days: 10
+  commit_interval: 30
+  include: !include recorder/includes.yaml
+  exclude: !include recorder/excludes.yaml
+
+# Use InfluxDB for long-term data recording
+influxdb:
+  host: localhost
+  port: 8086
+  database: homeassistant
+  username: !secret influxdb_user
+  password: !secret influxdb_pass
+  max_retries: 3
+  default_measurement: state
+  include: !include influxdb/includes.yaml
+  exclude: !include influxdb/excludes.yaml
+
+# History Settings
+history:
+  include: !include influxdb/includes.yaml
+  exclude: !include influxdb/excludes.yaml
+
+# Logbook Settings
+logbook:
+  include: !include logbook/includes.yaml
+  exclude: !include logbook/excludes.yaml
+
+# Enable OTA updates for Zigbee devices
+zha:
+  zigpy_config:
+    ota:
+      ikea_provider: true

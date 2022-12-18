@@ -1,0 +1,315 @@
+- id: '1657954049117'
+  alias: Update Benachrichtigungen
+  description: ''
+  use_blueprint:
+    path: Update Benachrichtigungen.yaml
+    input:
+      reminder_hours: '12'
+      update_entities:
+      - update.home_assistant_core_update
+      - update.home_assistant_operating_system_update
+      - update.home_assistant_supervisor_update
+      - update.u7lr
+      - update.ugw3
+      - update.us8p60
+      - update.usmini
+      mobile_app_device: d57c0883710a19fc750782b7cbdb397b
+      run_config_check: true
+      only_after: 07:00:00
+      only_before: '20:00:00'
+- id: '1670688318358'
+  alias: Wohnzimmerlampe ein-/ausschalten
+  description: Wohnzimmerlampe ein-/ausschalten, wenn Shortcut Button einmal gedrückt
+    wird
+  trigger:
+  - device_id: 47e8f828bb3bb1c741b029485013a88e
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 6a215cd52677eb61f0e14699b1550498
+    entity_id: switch.ikea_of_sweden_tradfri_control_outlet_switch
+    domain: switch
+  mode: single
+- id: '1670688833151'
+  alias: Wohnzimmerlampe bei Sonnenuntergang einschalten
+  description: Schaltet die Wohnzimmerlampe bei Sonnenuntergang ein, falls es vor
+    22 Uhr ist.
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  condition:
+  - condition: time
+    before: '22:00:00'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.dominik
+      state: home
+    - condition: state
+      entity_id: person.shiho
+      state: home
+  - condition: device
+    type: is_off
+    device_id: 6a215cd52677eb61f0e14699b1550498
+    entity_id: switch.ikea_of_sweden_tradfri_control_outlet_switch
+    domain: switch
+  action:
+  - type: turn_on
+    device_id: 6a215cd52677eb61f0e14699b1550498
+    entity_id: switch.ikea_of_sweden_tradfri_control_outlet_switch
+    domain: switch
+  mode: single
+- id: '1670692140117'
+  alias: Rolläden vollständig öffnen mit Fernbedienung
+  description: Öffnet die Rolläden vollständig, wenn die Einschalttaste der Fernbedienung
+    kurz gedrückt wird
+  trigger:
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_on
+  condition: []
+  action:
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: cover.rolladen_balkon_rechts
+    type: set_position
+    position: 100
+  - device_id: b636ac782ee3b6e565cedc9361c6a948
+    domain: cover
+    entity_id: cover.shellyswitch25_4c752533d2c4
+    type: set_position
+    position: 100
+  mode: single
+- id: '1670692254470'
+  alias: Rollläden vollständig schließen mit Fernbedienung
+  description: Schließt die Rolläden vollständig, wenn die Ausschalttaste der Fernbedienung
+    kurz gedrückt wird.
+  trigger:
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_off
+  condition: []
+  action:
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: cover.rolladen_balkon_rechts
+    type: set_position
+    position: 0
+  - device_id: b636ac782ee3b6e565cedc9361c6a948
+    domain: cover
+    entity_id: cover.shellyswitch25_4c752533d2c4
+    type: set_position
+    position: 0
+  mode: single
+- id: '1670694804524'
+  alias: Licht einschalten, wenn jemand nach Hause kommt
+  description: Schaltet manche Lichter an, wenn jemand nach Hause kommt
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.someone_home
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: sun
+    after: sunset
+    before: sunrise
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id:
+      - light.flur_licht
+      - light.wohnzimmer_licht_tur
+      - light.wohnzimmerlampe
+  mode: single
+- id: '1670763004553'
+  alias: Heizung bei offenem Fenster ausschalten
+  description: Schaltet die Heizung in dem Zimmer aus, in dem ein offenes Fenster
+    erkannt wurde
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.arbeitszimmer_open_window
+    from: 'off'
+    to: 'on'
+    id: arbeitszimmer
+  - platform: state
+    entity_id:
+    - binary_sensor.badezimmer_open_window
+    from: 'off'
+    to: 'on'
+    id: badezimmer
+  - platform: state
+    entity_id:
+    - binary_sensor.wohnzimmer_open_window
+    from: 'off'
+    to: 'on'
+    id: wohnzimmer
+  condition:
+  - condition: state
+    entity_id: binary_sensor.warm_inside
+    state: 'on'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: arbeitszimmer
+      sequence:
+      - device_id: 205df024614b863140e76ffee6f8146e
+        domain: climate
+        entity_id: climate.arbeitszimmer
+        type: set_hvac_mode
+        hvac_mode: 'off'
+    - conditions:
+      - condition: trigger
+        id: badezimmer
+      sequence:
+      - device_id: 0399e671c3e0d78d294619d3cd89639f
+        domain: climate
+        entity_id: climate.badezimmer
+        type: set_hvac_mode
+        hvac_mode: 'off'
+    - conditions:
+      - condition: trigger
+        id: wohnzimmer
+      sequence:
+      - device_id: c587d6d3d2c00b478dc8e35e8ff65e11
+        domain: climate
+        entity_id: climate.wohnzimmer
+        type: set_hvac_mode
+        hvac_mode: 'off'
+  mode: single
+- id: '1670765446255'
+  alias: Heizung einschalten, wenn Fenster geschlossen wird
+  description: Schaltet die Heizung in dem Zimmer ein, in dem ein offenes Fenster
+    geschlossen wurde
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.arbeitszimmer_open_window
+    from: 'on'
+    to: 'off'
+    id: arbeitszimmer
+  - platform: state
+    entity_id:
+    - binary_sensor.badezimmer_open_window
+    from: 'on'
+    to: 'off'
+    id: badezimmer
+  - platform: state
+    entity_id:
+    - binary_sensor.wohnzimmer_open_window
+    from: 'on'
+    to: 'off'
+    id: wohnzimmer
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: arbeitszimmer
+      sequence:
+      - device_id: 205df024614b863140e76ffee6f8146e
+        domain: climate
+        entity_id: climate.arbeitszimmer
+        type: set_hvac_mode
+        hvac_mode: auto
+    - conditions:
+      - condition: trigger
+        id: badezimmer
+      sequence:
+      - device_id: 0399e671c3e0d78d294619d3cd89639f
+        domain: climate
+        entity_id: climate.badezimmer
+        type: set_hvac_mode
+        hvac_mode: auto
+    - conditions:
+      - condition: trigger
+        id: wohnzimmer
+      sequence:
+      - device_id: c587d6d3d2c00b478dc8e35e8ff65e11
+        domain: climate
+        entity_id: climate.wohnzimmer
+        type: set_hvac_mode
+        hvac_mode: auto
+  mode: single
+- id: '1670775293197'
+  alias: Heizung ausschalten, wenn niemand Zuhause ist
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.someone_home
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: climate.set_preset_mode
+    data:
+      preset_mode: away
+    target:
+      area_id:
+      - arbeitszimmer
+      - badezimmer
+      - wohnzimmer
+  mode: single
+- id: '1670775647819'
+  alias: Heizung einschalten, wenn jemand nach Hause kommt
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.someone_home
+    to: 'on'
+  condition: []
+  action:
+  - service: climate.set_preset_mode
+    data:
+      preset_mode: home
+    target:
+      area_id:
+      - arbeitszimmer
+      - badezimmer
+      - wohnzimmer
+  mode: single
+- id: '1671392941932'
+  alias: Licht ausschalten, wenn keiner Zuhause ist
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.someone_home
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id:
+      - arbeitszimmer
+      - badezimmer
+      - flur
+      - kuche
+      - schlafzimmer
+      - terrasse
+      - wohnzimmer
+  mode: single
