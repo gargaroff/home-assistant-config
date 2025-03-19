@@ -11,6 +11,7 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 sensor: !include sensors.yaml
 binary_sensor: !include binary_sensors.yaml
+switch: !include switches.yaml
 
 # Use MariaDB
 recorder:
@@ -48,3 +49,6 @@ zha:
   zigpy_config:
     ota:
       ikea_provider: true
+
+# Enable wake-on-lan for my desktop PC
+wake_on_lan:

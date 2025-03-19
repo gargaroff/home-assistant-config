@@ -1,0 +1,3 @@
+- platform: wake_on_lan
+  mac: 30:9c:23:8c:72:00
+  name: "dt-dominik-01"
