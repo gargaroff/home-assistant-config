@@ -423,3 +423,30 @@
     entity_id: e18dcea846aa2b3cd228c33c39b4450c
     type: open
   mode: single
+- id: '1742400859847'
+  alias: Benachrichtigung bei Raspberry Pi Stromproblem
+  description: Sendet eine Benachrichtigung, wenn der Raspberry Pi ein Stromversorgungsproblem erkennt.
+  triggers:
+  - entity_id: binary_sensor.rpi_power_status
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      title: ⚠️ Home Assistant Stromproblem
+      message: Dein Raspberry Pi hat ein Stromversorgungsproblem! Bitte überprüfe das Netzteil.
+      data:
+        ttl: 0
+        priority: high
+    action: notify.mobile_app_pixel_6a
+  - data:
+      title: Raspberry Pi Stromversorgungsproblem
+      message: Es wurde ein Unterspannungs- oder Stromproblem erkannt. Bitte überprüfe dein Netzteil.
+    action: persistent_notification.create
+  - delay: 00:05:00
+  - condition: state
+    entity_id: binary_sensor.rpi_power_status
+    state: 'on'
+  - action: homeassistant.restart
+    data: {}
+  mode: single
