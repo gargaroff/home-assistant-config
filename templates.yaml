@@ -1,0 +1,17 @@
+# Health sensor for Uptime Kuma Services
+- binary_sensor:
+  - name: "Service Health Alarm"
+    state: >
+      {% set kuma = states.binary_sensor
+          | selectattr('attributes.device_class', 'equalto', 'connectivity')
+          | selectattr('entity_id', 'search', 'uptime_kuma')
+          | list %}
+      {{ kuma | selectattr('state', 'equalto', 'off') | list | count > 0 }}
+    device_class: problem
+    attributes:
+      down_services: >
+        {% set kuma = states.binary_sensor
+            | selectattr('attributes.device_class', 'equalto', 'connectivity')
+            | selectattr('entity_id', 'search', 'uptime_kuma')
+            | list %}
+        {{ kuma | selectattr('state', 'equalto', 'off') | map(attribute='name') | list }}

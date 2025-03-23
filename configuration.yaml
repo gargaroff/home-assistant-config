@@ -12,6 +12,7 @@ scene: !include scenes.yaml
 sensor: !include sensors.yaml
 binary_sensor: !include binary_sensors.yaml
 switch: !include switches.yaml
+template: !include templates.yaml
 
 # Use MariaDB
 recorder:

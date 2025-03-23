@@ -458,6 +458,8 @@
   description: Sendet eine Benachrichtigung bei Erhalt eines Kuma Service Alarms
   triggers:
   - webhook_id: kuma_alert
+    allowed_methods:
+    - POST
     trigger: webhook
   actions:
   - action: notify.mobile_app_pixel_6a
@@ -468,3 +470,16 @@
         ttl: 0
         priority: high
   mode: single
+- id: '1742750485925'
+  alias: Service Offline Alarm
+  description: Sendet eine Benachrichtigung, dass ein oder mehrere Services offline
+    sind
+  triggers:
+  - entity_id: binary_sensor.service_health_alarm
+    to: 'on'
+    trigger: state
+  actions:
+  - data:
+      title: Service Offline Alarm
+      message: ⚠️ Ein oder mehrere Services sind OFFLINE! ⚠️
+    action: persistent_notification.create
