@@ -17,14 +17,14 @@ switch: !include switches.yaml
 recorder:
   db_url: !secret mariadb_url
   auto_purge: true
-  purge_keep_days: 10
+  purge_keep_days: 90
   commit_interval: 30
   include: !include recorder/includes.yaml
   exclude: !include recorder/excludes.yaml
 
 # Use InfluxDB for long-term data recording
 influxdb:
-  host: localhost
+  host: 192.168.1.15
   port: 8086
   database: homeassistant
   username: !secret influxdb_user
