@@ -32,13 +32,15 @@ influxdb:
   password: !secret influxdb_pass
   max_retries: 3
   default_measurement: state
-  include: !include influxdb/includes.yaml
-  exclude: !include influxdb/excludes.yaml
+  include:
+    entities: !include influxdb/include_entities.yaml
+    domains: !include influxdb/include_domains.yaml
+  exclude:
+    entities: !include influxdb/exclude_entities.yaml
+    domains: !include influxdb/exclude_domains.yaml
 
-# History Settings
-history:
-  include: !include influxdb/includes.yaml
-  exclude: !include influxdb/excludes.yaml
+# Filter Settings
+filter: !include influxdb/filter.yaml
 
 # Logbook Settings
 logbook:
@@ -49,7 +51,8 @@ logbook:
 zha:
   zigpy_config:
     ota:
-      ikea_provider: true
+      extra_providers:
+        - type: ikea
 
 # Enable wake-on-lan for my desktop PC
 wake_on_lan:
