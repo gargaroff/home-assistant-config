@@ -32,15 +32,8 @@ influxdb:
   password: !secret influxdb_pass
   max_retries: 3
   default_measurement: state
-  include:
-    entities: !include influxdb/include_entities.yaml
-    domains: !include influxdb/include_domains.yaml
-  exclude:
-    entities: !include influxdb/exclude_entities.yaml
-    domains: !include influxdb/exclude_domains.yaml
-
-# Filter Settings
-filter: !include influxdb/filter.yaml
+  include: !include influxdb/includes.yaml
+  exclude: !include influxdb/excludes.yaml
 
 # Logbook Settings
 logbook:
