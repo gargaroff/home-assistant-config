@@ -4,7 +4,7 @@
     state: >
       {% set kuma = states.binary_sensor
           | selectattr('attributes.device_class', 'equalto', 'connectivity')
-          | selectattr('entity_id', 'search', 'uptime_kuma')
+          | selectattr('entity_id', 'endswith', '_status')
           | list %}
       {{ kuma | selectattr('state', 'equalto', 'off') | list | count > 0 }}
     device_class: problem
@@ -12,6 +12,6 @@
       down_services: >
         {% set kuma = states.binary_sensor
             | selectattr('attributes.device_class', 'equalto', 'connectivity')
-            | selectattr('entity_id', 'search', 'uptime_kuma')
+            | selectattr('entity_id', 'endswith', '_status')
             | list %}
         {{ kuma | selectattr('state', 'equalto', 'off') | map(attribute='name') | list }}
