@@ -67,24 +67,22 @@
   alias: Rollläden vollständig schließen mit Fernbedienung
   description: Schließt die Rolläden vollständig, wenn die Ausschalttaste der Fernbedienung
     kurz gedrückt wird.
-  trigger:
+  triggers:
   - device_id: e464a5a9bd9835b772adce825d27f4af
     domain: zha
-    platform: device
     type: remote_button_short_press
     subtype: turn_off
-  condition: []
-  action:
-  - device_id: 1225fad3bdd18d0f82cac36db43936d2
-    domain: cover
-    entity_id: cover.rolladen_balkon_rechts
-    type: set_position
-    position: 0
+    trigger: device
+  conditions: []
+  actions:
   - device_id: b636ac782ee3b6e565cedc9361c6a948
     domain: cover
-    entity_id: cover.shellyswitch25_4c752533d2c4
-    type: set_position
-    position: 0
+    entity_id: e18dcea846aa2b3cd228c33c39b4450c
+    type: open
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
+    type: open
   mode: single
 - id: '1670694804524'
   alias: Licht einschalten, wenn jemand nach Hause kommt
@@ -483,3 +481,69 @@
       title: Service Offline Alarm
       message: ⚠️ Ein oder mehrere Services sind OFFLINE! ⚠️
     action: persistent_notification.create
+- id: '1742805783444'
+  alias: Rolläden öffnen, wenn Fernbedienung gedrückt gehalten wird
+  description: Öffnet die Rölläden solange die Fernbedienung gedrückt gehalten wird.
+  triggers:
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    type: remote_button_long_press
+    subtype: dim_up
+    trigger: device
+  conditions: []
+  actions:
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
+    type: open
+  - device_id: b636ac782ee3b6e565cedc9361c6a948
+    domain: cover
+    entity_id: e18dcea846aa2b3cd228c33c39b4450c
+    type: open
+  mode: single
+- id: '1742805875616'
+  alias: Rolläden anhalten, wenn die Fernbedienung nicht mehr gedrückt gehalten wird
+  description: Stoppt die Rölläden sobald die Fernbedienung nicht mehr gedrückt gehalten
+    wird.
+  triggers:
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    type: remote_button_long_release
+    subtype: dim_up
+    trigger: device
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    type: remote_button_long_release
+    subtype: dim_down
+    trigger: device
+  conditions: []
+  actions:
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
+    type: stop
+  - device_id: b636ac782ee3b6e565cedc9361c6a948
+    domain: cover
+    entity_id: e18dcea846aa2b3cd228c33c39b4450c
+    type: stop
+  mode: single
+- id: '1742806607239'
+  alias: Rolläden schließen, wenn die Fernbedienung gedrückt gehalten wird
+  description: Schließt die Rölläden solange die Fernbedienung gedrückt gehalten wird.
+  triggers:
+  - device_id: e464a5a9bd9835b772adce825d27f4af
+    domain: zha
+    type: remote_button_long_press
+    subtype: dim_down
+    trigger: device
+  conditions: []
+  actions:
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
+    type: close
+  - device_id: b636ac782ee3b6e565cedc9361c6a948
+    domain: cover
+    entity_id: e18dcea846aa2b3cd228c33c39b4450c
+    type: close
+  mode: single
