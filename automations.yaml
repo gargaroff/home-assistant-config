@@ -44,24 +44,22 @@
   alias: Rolläden vollständig öffnen mit Fernbedienung
   description: Öffnet die Rolläden vollständig, wenn die Einschalttaste der Fernbedienung
     kurz gedrückt wird
-  trigger:
+  triggers:
   - device_id: e464a5a9bd9835b772adce825d27f4af
     domain: zha
-    platform: device
     type: remote_button_short_press
     subtype: turn_on
-  condition: []
-  action:
-  - device_id: 1225fad3bdd18d0f82cac36db43936d2
-    domain: cover
-    entity_id: cover.rolladen_balkon_rechts
-    type: set_position
-    position: 100
+    trigger: device
+  conditions: []
+  actions:
   - device_id: b636ac782ee3b6e565cedc9361c6a948
     domain: cover
-    entity_id: cover.shellyswitch25_4c752533d2c4
-    type: set_position
-    position: 100
+    entity_id: e18dcea846aa2b3cd228c33c39b4450c
+    type: open
+  - device_id: 1225fad3bdd18d0f82cac36db43936d2
+    domain: cover
+    entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
+    type: open
   mode: single
 - id: '1670692254470'
   alias: Rollläden vollständig schließen mit Fernbedienung
@@ -78,11 +76,11 @@
   - device_id: b636ac782ee3b6e565cedc9361c6a948
     domain: cover
     entity_id: e18dcea846aa2b3cd228c33c39b4450c
-    type: open
+    type: close
   - device_id: 1225fad3bdd18d0f82cac36db43936d2
     domain: cover
     entity_id: 1e3c8d2dfa655b8b526ff3b5ec8e9bfa
-    type: open
+    type: close
   mode: single
 - id: '1670694804524'
   alias: Licht einschalten, wenn jemand nach Hause kommt
