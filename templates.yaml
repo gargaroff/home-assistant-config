@@ -15,3 +15,25 @@
             | selectattr('entity_id', 'search', '_status')
             | list %}
         {{ kuma | selectattr('state', 'equalto', 'off') | map(attribute='name') | list }}
+- trigger:
+  - trigger: time_pattern
+    hours: /6
+  - trigger: homeassistant
+    event: start
+  action:
+    - action: weather.get_forecasts
+      data:
+        type: daily
+      target:
+        entity_id:
+          - weather.geyen_pulheim
+          - weather.zuhause
+      response_variable: daily
+  sensor:
+    - name: Tägliche Wettervorhersage
+      unique_id: weather_forecast_daily
+      icon: mdi:weather-cloudy
+      state: "{{ daily['weather.geyen_pulheim'].forecast[0].condition }}"
+      attributes:
+        forecast: "{{ daily['weather.geyen_pulheim'].forecast }}"
+        temperature: "{{ daily['weather.geyen_pulheim'].forecast[0].temperature }}"
